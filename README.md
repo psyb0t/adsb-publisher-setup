@@ -79,7 +79,6 @@ After setup, the script prints all URLs. Typically:
 
 ```
 .
-├── setup.sh                          # The setup script
 ├── docker-compose.yml                # Generated compose file
 ├── .env                              # Generated environment variables
 ├── .adsb_publisher_setup_save        # Cached answers for re-runs
