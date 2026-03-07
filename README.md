@@ -10,11 +10,14 @@ Out of the box:
 
 - [adsb.fi](https://adsb.fi)
 - [adsb.one](https://adsb.one)
+- [adsb.lol](https://adsb.lol)
 - [Planespotters.net](https://www.planespotters.net)
 - [The Air Traffic](https://theairtraffic.com)
 - [AV Delphi](https://www.avdelphi.com)
 - [ADSBexchange](https://adsbexchange.com)
 - [airplanes.live](https://airplanes.live)
+- [HPRadar / SkyFeed](https://skyfeed.hpradar.com)
+- [Fly Italy ADS-B](https://flyitalyadsb.com)
 
 Optional (interactive signup during setup):
 

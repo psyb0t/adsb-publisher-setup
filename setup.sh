@@ -332,12 +332,18 @@ services:
           adsb,data.avdelphi.com,24999,beast_reduce_plus_out;
           adsb,feed.adsbexchange.com,30004,beast_reduce_plus_out;
           adsb,feed.airplanes.live,30004,beast_reduce_plus_out;
+          adsb,in.adsb.lol,30004,beast_reduce_plus_out;
+          adsb,skyfeed.hpradar.com,30004,beast_reduce_plus_out;
+          adsb,dati.flyitalyadsb.com,4905,beast_reduce_plus_out;
           mlat,feed.adsb.fi,31090,39000;
           mlat,feed.adsb.one,64006,39002;
           mlat,mlat.planespotters.net,31090,39003;
           mlat,feed.theairtraffic.com,31090,39004;
           mlat,feed.adsbexchange.com,31090,39005;
           mlat,feed.airplanes.live,31090,39006;
+          mlat,in.adsb.lol,31090,39007;
+          mlat,skyfeed.hpradar.com,31090,39008;
+          mlat,dati.flyitalyadsb.com,30100,39009;
           mlathub,piaware,30105,beast_in;
           mlathub,fr24,30105,beast_in
       - TAR1090_DEFAULTCENTERLAT=${FEEDER_LAT}
@@ -567,7 +573,7 @@ launch() {
     [[ "${DO_PIAWARE}" == "y" && -n "${PIAWARE_PORT}" ]] && log "Piaware:            http://${LOCAL_IP}:${PIAWARE_PORT}"
     [[ -n "${GRAFANA_PORT}" ]] && log "Grafana:            http://${LOCAL_IP}:${GRAFANA_PORT}"
     echo ""
-    log "Publishing to: adsb.fi, adsb.one, planespotters.net, theairtraffic.com, avdelphi.com, adsbexchange.com, airplanes.live"
+    log "Publishing to: adsb.fi, adsb.one, adsb.lol, planespotters.net, theairtraffic.com, avdelphi.com, adsbexchange.com, airplanes.live, hpradar.com, flyitalyadsb.com"
     [[ -n "${FR24_KEY}" ]] && log "Publishing to: FlightRadar24"
     [[ "${DO_PIAWARE}" == "y" ]] && log "Publishing to: FlightAware"
     echo ""
