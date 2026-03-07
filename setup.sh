@@ -42,7 +42,7 @@ prompt_cached() {
     [[ -n "${cached}" ]] && full_prompt="${full_prompt} [${cached}]"
     ask "${full_prompt}: "
     local input
-    read -r input
+    read -r input < /dev/tty
     eval "${var_name}=\"\${input:-\${cached}}\""
     save_answer "${var_name}" "${!var_name}"
 }
@@ -55,7 +55,7 @@ prompt_port() {
     [[ -n "${cached}" ]] && full_prompt="${full_prompt} [${cached}]"
     ask "${full_prompt}: "
     local input
-    read -r input
+    read -r input < /dev/tty
     if [[ "${input}" == "-" ]]; then
         eval "${var_name}=''"
     else
@@ -236,7 +236,7 @@ signup_fr24() {
         prompt_cached FR24_KEY "FR24 sharing key"
     else
         ask "Already have a FR24 sharing key? (y/n): "
-        read -r HAS_KEY
+        read -r HAS_KEY < /dev/tty
 
         if [[ "${HAS_KEY}" == "y" ]]; then
             prompt_cached FR24_KEY "Enter your FR24 sharing key"
@@ -266,7 +266,7 @@ signup_piaware() {
         prompt_cached PIAWARE_ID "FlightAware feeder ID"
     else
         ask "Already have a FlightAware feeder ID? (y/n): "
-        read -r HAS_PIAWARE
+        read -r HAS_PIAWARE < /dev/tty
 
         if [[ "${HAS_PIAWARE}" == "y" ]]; then
             prompt_cached PIAWARE_ID "Enter your FlightAware feeder ID"
