@@ -91,7 +91,8 @@ After setup, the script prints all URLs. Typically:
 │   ├── globe_history/                # Aircraft track history
 │   └── graphs1090/                   # graphs1090 collected stats
 ├── planesnitch/                      # (if enabled)
-│   ├── config.yaml                   # Generated planesnitch config
+│   ├── config.yaml                   # Your planesnitch config (not overwritten on re-run)
+│   ├── config.yaml.example           # Generated example config (always updated)
 │   └── csv/                          # plane-alert-db CSV watchlists (github.com/sdr-enthusiasts/plane-alert-db)
 ├── prometheus/
 │   ├── config/prometheus.yml         # Scrape config

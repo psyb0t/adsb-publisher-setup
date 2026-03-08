@@ -317,7 +317,7 @@ write_planesnitch_config() {
         curl -sf "${csv_base}/${csv}.csv" -o "planesnitch/csv/${csv}.csv" 2>/dev/null || warn "Failed to download ${csv}.csv"
     done
 
-    cat > planesnitch/config.yaml <<EOF
+    cat > planesnitch/config.yaml.example <<EOF
 poll_interval: 15s
 display_units: aviation
 
@@ -411,10 +411,13 @@ alerts: []
 #     headers:
 #       Authorization: "Bearer YOUR_TOKEN"
 EOF
-    log "planesnitch config written."
+    log "planesnitch example config written to planesnitch/config.yaml.example"
+    if [[ ! -f planesnitch/config.yaml ]]; then
+        cp planesnitch/config.yaml.example planesnitch/config.yaml
+        log "No existing config found — copied example to planesnitch/config.yaml"
+    fi
     echo ""
-    log "planesnitch is pre-configured but has no alerts enabled."
-    log "Edit planesnitch/config.yaml to set up notifications."
+    log "Edit planesnitch/config.yaml to set up alerts and notifications."
     log "Docs: https://github.com/psyb0t/docker-planesnitch"
 }
 
