@@ -108,6 +108,16 @@ After setup, the script prints all URLs. Typically:
 
 Just run `bash setup.sh` again. It picks up your previous answers and lets you change anything. The stack gets recreated with the new config.
 
+To skip all prompts and reuse cached answers:
+
+```bash
+curl -sL https://raw.githubusercontent.com/psyb0t/adsb-publisher-setup/main/setup.sh | bash -s -- --auto
+```
+
+Or `bash setup.sh --auto` / `bash setup.sh -y`.
+
+The `-s` tells bash to read the script from stdin (the curl pipe) and `--` separates bash's flags from the script's arguments so `--auto` gets passed to the script instead of being eaten by bash.
+
 ## Notes
 
 - The script blacklists kernel DVB drivers that conflict with RTL-SDR usage for ADS-B

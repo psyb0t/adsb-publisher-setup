@@ -12,6 +12,9 @@ GREEN='\033[0;32m'
 CYAN='\033[0;36m'
 NC='\033[0m'
 
+AUTO=false
+[[ "${1:-}" == "--auto" || "${1:-}" == "-y" ]] && AUTO=true
+
 ULTRAFEEDER_IMAGE="ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf"
 
 log() { echo -e "${GREEN}[+]${NC} $1"; }
@@ -38,6 +41,11 @@ save_answer() {
 prompt_cached() {
     local var_name="$1" prompt_text="$2" fallback="${3:-}"
     local cached="${!var_name:-${fallback}}"
+    if [[ "${AUTO}" == true && -n "${cached}" ]]; then
+        eval "${var_name}=\"\${cached}\""
+        log "${prompt_text}: ${cached}"
+        return
+    fi
     local full_prompt="${prompt_text}"
     [[ -n "${cached}" ]] && full_prompt="${full_prompt} [${cached}]"
     ask "${full_prompt}: "
@@ -51,6 +59,11 @@ prompt_cached() {
 prompt_port() {
     local var_name="$1" prompt_text="$2" fallback="${3:-}"
     local cached="${!var_name:-${fallback}}"
+    if [[ "${AUTO}" == true && -n "${cached}" ]]; then
+        eval "${var_name}=\"\${cached}\""
+        log "${prompt_text}: ${cached}"
+        return
+    fi
     local full_prompt="${prompt_text} (- = no expose)"
     [[ -n "${cached}" ]] && full_prompt="${full_prompt} [${cached}]"
     ask "${full_prompt}: "
