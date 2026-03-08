@@ -53,8 +53,9 @@ The script walks you through everything interactively:
 2. Picks up RTL-SDR devices automatically
 3. Asks for port assignments (or `-` to skip exposing)
 4. Optionally signs you up for FlightRadar24 and FlightAware
-5. Generates `docker-compose.yml`, `.env`, Prometheus config, and Grafana provisioning
-6. Pulls images and launches the stack
+5. Optionally sets up [planesnitch](https://github.com/psyb0t/docker-planesnitch) for aircraft alerts (Telegram/webhooks)
+6. Generates `docker-compose.yml`, `.env`, Prometheus config, and Grafana provisioning
+7. Pulls images and launches the stack
 
 Previous answers are cached in `.adsb_publisher_setup_save` — re-running the script reuses them as defaults.
 
@@ -62,11 +63,12 @@ Previous answers are cached in `.adsb_publisher_setup_save` — re-running the s
 
 | Service     | Description                                            | Default Port |
 | ----------- | ------------------------------------------------------ | ------------ |
-| ultrafeeder | SDR receiver, decoder, feeder, tar1090 map, graphs1090 | 10980        |
-| fr24        | FlightRadar24 feeder (optional)                        | 10981        |
-| piaware     | FlightAware feeder (optional)                          | 10982        |
-| prometheus  | Metrics collection from ultrafeeder                    | —            |
-| grafana     | Dashboards for aircraft stats, signal, range           | 10984        |
+| [ultrafeeder](https://github.com/sdr-enthusiasts/docker-adsb-ultrafeeder) | SDR receiver, decoder, feeder, tar1090 map, graphs1090 | 10980 |
+| [fr24](https://github.com/sdr-enthusiasts/docker-flightradar24) | FlightRadar24 feeder (optional) | 10981 |
+| [piaware](https://github.com/sdr-enthusiasts/docker-piaware) | FlightAware feeder (optional) | 10982 |
+| [planesnitch](https://github.com/psyb0t/docker-planesnitch) | Aircraft alerts to Telegram/webhooks (optional) | — |
+| [prometheus](https://github.com/prometheus/prometheus) | Metrics collection from ultrafeeder | — |
+| [grafana](https://github.com/grafana/grafana) | Dashboards for aircraft stats, signal, range | 10984 |
 
 ## Web UIs
 
@@ -88,6 +90,9 @@ After setup, the script prints all URLs. Typically:
 ├── ultrafeeder/
 │   ├── globe_history/                # Aircraft track history
 │   └── graphs1090/                   # graphs1090 collected stats
+├── planesnitch/                      # (if enabled)
+│   ├── config.yaml                   # Generated planesnitch config
+│   └── csv/                          # plane-alert-db CSV watchlists (github.com/sdr-enthusiasts/plane-alert-db)
 ├── prometheus/
 │   ├── config/prometheus.yml         # Scrape config
 │   └── data/                         # Prometheus TSDB

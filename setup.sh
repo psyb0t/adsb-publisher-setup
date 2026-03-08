@@ -282,6 +282,129 @@ signup_piaware() {
 }
 
 
+setup_planesnitch() {
+    echo ""
+    prompt_cached DO_PLANESNITCH "Set up planesnitch (aircraft alerts to Telegram/webhooks)? (y/n)" "${DO_PLANESNITCH:-n}"
+
+    if [[ "${DO_PLANESNITCH}" != "y" ]]; then
+        DO_PLANESNITCH="n"
+        return
+    fi
+}
+
+write_planesnitch_config() {
+    log "Writing planesnitch config..."
+    mkdir -p planesnitch/csv
+
+    # download all plane-alert-db CSVs
+    local csv_base="https://raw.githubusercontent.com/sdr-enthusiasts/plane-alert-db/main"
+    local csvs=("plane-alert-db" "plane-alert-mil" "plane-alert-gov" "plane-alert-pol" "plane-alert-pia" "plane-alert-ukraine")
+    for csv in "${csvs[@]}"; do
+        log "Downloading ${csv}.csv..."
+        curl -sf "${csv_base}/${csv}.csv" -o "planesnitch/csv/${csv}.csv" 2>/dev/null || warn "Failed to download ${csv}.csv"
+    done
+
+    cat > planesnitch/config.yaml <<EOF
+poll_interval: 15s
+display_units: aviation
+
+locations:
+  ${STATION_NAME}:
+    name: "${STATION_NAME}"
+    lat: ${LAT}
+    lon: ${LON}
+    radius: 150km
+
+sources:
+  - type: ultrafeeder
+    url: http://ultrafeeder:80/tar1090/data/aircraft.json
+  - type: adsb_lol
+  - type: adsb_fi
+  - type: airplanes_live
+  - type: adsb_one
+
+watchlists:
+  emergencies:
+    type: squawk
+    values: ["7500", "7600", "7700", "7400", "7777"]
+  military:
+    type: icao_csv
+    source: /csv/plane-alert-mil.csv
+  government:
+    type: icao_csv
+    source: /csv/plane-alert-gov.csv
+  police:
+    type: icao_csv
+    source: /csv/plane-alert-pol.csv
+  interesting:
+    type: icao_csv
+    source: /csv/plane-alert-db.csv
+  pia:
+    type: icao_csv
+    source: /csv/plane-alert-pia.csv
+  ukraine:
+    type: icao_csv
+    source: /csv/plane-alert-ukraine.csv
+  low_flyers:
+    type: proximity
+    min_altitude: 0ft
+    max_altitude: 3000ft
+
+# No alerts enabled yet. Uncomment and edit the sections below.
+# Full docs: https://github.com/psyb0t/docker-planesnitch
+
+alerts: []
+
+# alerts:
+#   - name: "Emergency Alert"
+#     watchlists: [emergencies]
+#     cooldown: 1m
+#     notify: [my_telegram]
+#
+#   - name: "Military Spotter"
+#     watchlists: [military]
+#     cooldown: 5m
+#     notify: [my_telegram]
+#
+#   - name: "Government Watch"
+#     watchlists: [government]
+#     cooldown: 5m
+#     notify: [my_telegram]
+#
+#   - name: "Police Activity"
+#     watchlists: [police]
+#     cooldown: 5m
+#     notify: [my_telegram]
+#
+#   - name: "Interesting Aircraft"
+#     watchlists: [interesting, pia, ukraine]
+#     cooldown: 5m
+#     notify: [my_telegram]
+#
+#   - name: "Low Flyer"
+#     watchlists: [low_flyers]
+#     cooldown: 10m
+#     notify: [my_telegram]
+
+# notifications:
+#   my_telegram:
+#     type: telegram
+#     bot_token: "YOUR_BOT_TOKEN"
+#     chat_id: "YOUR_CHAT_ID"
+#
+#   my_webhook:
+#     type: webhook
+#     url: "https://example.com/hook"
+#     headers:
+#       Authorization: "Bearer YOUR_TOKEN"
+EOF
+    log "planesnitch config written."
+    echo ""
+    log "planesnitch is pre-configured but has no alerts enabled."
+    log "Edit planesnitch/config.yaml to set up notifications."
+    log "Docs: https://github.com/psyb0t/docker-planesnitch"
+}
+
 write_env() {
     log "Writing ${ENV_FILE}..."
     cat > "${ENV_FILE}" <<EOF
@@ -461,6 +584,27 @@ YAML
         sed -i '/^  grafana:/a\    ports:\n      - '"${GRAFANA_PORT}"':3000' "${COMPOSE_FILE}"
     fi
 
+    if [[ "${DO_PLANESNITCH}" == "y" ]]; then
+        cat >> "${COMPOSE_FILE}" <<'YAML'
+
+  planesnitch:
+    image: psyb0t/planesnitch:latest
+    restart: unless-stopped
+    depends_on:
+      ultrafeeder:
+        condition: service_healthy
+    volumes:
+      - ./planesnitch/config.yaml:/app/config.yaml:ro
+      - ./planesnitch/csv:/csv:ro
+    healthcheck:
+      test: ["CMD", "curl", "-sf", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+YAML
+    fi
+
     log "Docker compose file written."
 }
 
@@ -572,6 +716,7 @@ launch() {
     [[ -n "${FR24_KEY}" && -n "${FR24_PORT}" ]] && log "FR24 status:        http://${LOCAL_IP}:${FR24_PORT}"
     [[ "${DO_PIAWARE}" == "y" && -n "${PIAWARE_PORT}" ]] && log "Piaware:            http://${LOCAL_IP}:${PIAWARE_PORT}"
     [[ -n "${GRAFANA_PORT}" ]] && log "Grafana:            http://${LOCAL_IP}:${GRAFANA_PORT}"
+    [[ "${DO_PLANESNITCH}" == "y" ]] && log "planesnitch:        running (no alerts until you edit planesnitch/config.yaml)"
     echo ""
     log "Publishing to: adsb.fi, adsb.one, adsb.lol, planespotters.net, theairtraffic.com, avdelphi.com, adsbexchange.com, airplanes.live, hpradar.com, flyitalyadsb.com"
     [[ -n "${FR24_KEY}" ]] && log "Publishing to: FlightRadar24"
@@ -601,9 +746,11 @@ main() {
     detect_sdr
     signup_fr24
     signup_piaware
+    setup_planesnitch
     write_env
     write_compose
     create_dirs
+    [[ "${DO_PLANESNITCH}" == "y" ]] && write_planesnitch_config
     launch
 }
 
