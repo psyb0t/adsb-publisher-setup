@@ -298,7 +298,7 @@ write_planesnitch_config() {
 
     # download all plane-alert-db CSVs
     local csv_base="https://raw.githubusercontent.com/sdr-enthusiasts/plane-alert-db/main"
-    local csvs=("plane-alert-db" "plane-alert-mil" "plane-alert-gov" "plane-alert-pol" "plane-alert-pia" "plane-alert-ukraine")
+    local csvs=("plane-alert-db" "plane-alert-mil" "plane-alert-gov" "plane-alert-pol" "plane-alert-pia" "plane-alert-civ")
     for csv in "${csvs[@]}"; do
         log "Downloading ${csv}.csv..."
         curl -sf "${csv_base}/${csv}.csv" -o "planesnitch/csv/${csv}.csv" 2>/dev/null || warn "Failed to download ${csv}.csv"
@@ -342,9 +342,9 @@ watchlists:
   pia:
     type: icao_csv
     source: /csv/plane-alert-pia.csv
-  ukraine:
+  civilian:
     type: icao_csv
-    source: /csv/plane-alert-ukraine.csv
+    source: /csv/plane-alert-civ.csv
   low_flyers:
     type: proximity
     min_altitude: 0ft
@@ -377,7 +377,7 @@ alerts: []
 #     notify: [my_telegram]
 #
 #   - name: "Interesting Aircraft"
-#     watchlists: [interesting, pia, ukraine]
+#     watchlists: [interesting, pia, civilian]
 #     cooldown: 5m
 #     notify: [my_telegram]
 #
