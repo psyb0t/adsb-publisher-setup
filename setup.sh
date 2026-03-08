@@ -318,7 +318,7 @@ write_planesnitch_config() {
     done
 
     cat > planesnitch/config.yaml.example <<EOF
-poll_interval: 15s
+poll_interval: 1m
 display_units: aviation
 
 locations:
@@ -330,7 +330,7 @@ locations:
 
 sources:
   - type: ultrafeeder
-    url: http://ultrafeeder:80/tar1090/data/aircraft.json
+    url: http://ultrafeeder:80/data/aircraft.json
   - type: adsb_lol
   - type: adsb_fi
   - type: airplanes_live
