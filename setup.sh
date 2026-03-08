@@ -41,7 +41,7 @@ save_answer() {
 prompt_cached() {
     local var_name="$1" prompt_text="$2" fallback="${3:-}"
     local cached="${!var_name:-${fallback}}"
-    if [[ "${AUTO}" == true && -n "${cached}" ]]; then
+    if [[ "${AUTO}" == true && -n "${!var_name:-}" ]]; then
         eval "${var_name}=\"\${cached}\""
         log "${prompt_text}: ${cached}"
         return
@@ -59,7 +59,7 @@ prompt_cached() {
 prompt_port() {
     local var_name="$1" prompt_text="$2" fallback="${3:-}"
     local cached="${!var_name:-${fallback}}"
-    if [[ "${AUTO}" == true && -n "${cached}" ]]; then
+    if [[ "${AUTO}" == true && -n "${!var_name:-}" ]]; then
         eval "${var_name}=\"\${cached}\""
         log "${prompt_text}: ${cached}"
         return

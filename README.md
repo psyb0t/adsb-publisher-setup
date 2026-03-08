@@ -108,13 +108,17 @@ After setup, the script prints all URLs. Typically:
 
 Just run `bash setup.sh` again. It picks up your previous answers and lets you change anything. The stack gets recreated with the new config.
 
-To skip all prompts and reuse cached answers:
+## Updating
+
+To pull the latest images and rebuild the stack without being asked a million questions:
 
 ```bash
 curl -sL https://raw.githubusercontent.com/psyb0t/adsb-publisher-setup/main/setup.sh | bash -s -- --auto
 ```
 
-Or `bash setup.sh --auto` / `bash setup.sh -y`.
+Or if you cloned the repo: `bash setup.sh --auto` (also accepts `-y`).
+
+This reuses all your saved answers from `.adsb_publisher_setup_save`, pulls fresh images, and relaunches. No prompts unless new functionality was added to the script that you haven't configured yet — in that case it only asks about the new stuff.
 
 The `-s` tells bash to read the script from stdin (the curl pipe) and `--` separates bash's flags from the script's arguments so `--auto` gets passed to the script instead of being eaten by bash.
 
