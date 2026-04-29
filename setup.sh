@@ -612,12 +612,6 @@ YAML
     volumes:
       - ./planesnitch/config.yaml:/app/config.yaml:ro
       - ./planesnitch/csv:/csv:ro
-    healthcheck:
-      test: ["CMD", "curl", "-sf", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
-      start_period: 30s
 YAML
     fi
 
