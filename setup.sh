@@ -308,6 +308,7 @@ setup_planesnitch() {
 write_planesnitch_config() {
     log "Writing planesnitch config..."
     mkdir -p planesnitch/csv
+    mkdir -p planesnitch/images
 
     # download all plane-alert-db CSVs
     local csv_base="https://raw.githubusercontent.com/sdr-enthusiasts/plane-alert-db/main"
@@ -604,7 +605,7 @@ YAML
         cat >> "${COMPOSE_FILE}" <<'YAML'
 
   planesnitch:
-    image: psyb0t/planesnitch:latest
+    image: psyb0t/planesnitch:v1.6.0
     restart: unless-stopped
     depends_on:
       ultrafeeder:
@@ -612,6 +613,7 @@ YAML
     volumes:
       - ./planesnitch/config.yaml:/app/config.yaml:ro
       - ./planesnitch/csv:/csv:ro
+      - ./planesnitch/images:/images
 YAML
     fi
 
