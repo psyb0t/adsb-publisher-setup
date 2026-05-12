@@ -605,7 +605,7 @@ YAML
         cat >> "${COMPOSE_FILE}" <<'YAML'
 
   planesnitch:
-    image: psyb0t/planesnitch:v1.6.0
+    image: psyb0t/planesnitch:v1.7.0
     restart: unless-stopped
     depends_on:
       ultrafeeder:
