@@ -446,7 +446,7 @@ write_compose() {
     cat > "${COMPOSE_FILE}" <<'YAML'
 services:
   ultrafeeder:
-    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf
+    image: ghcr.io/sdr-enthusiasts/docker-adsb-ultrafeeder:telegraf-build-373
     restart: unless-stopped
     device_cgroup_rules:
       - 'c 189:* rwm'
@@ -528,7 +528,7 @@ YAML
         cat >> "${COMPOSE_FILE}" <<'YAML'
 
   fr24:
-    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest
+    image: ghcr.io/sdr-enthusiasts/docker-flightradar24:latest@sha256:47c376bb02ff42e292c191fff5c76163aab1767cf7514781475dbd4dfca8dd61
     restart: unless-stopped
     depends_on:
       ultrafeeder:
@@ -548,7 +548,7 @@ YAML
         cat >> "${COMPOSE_FILE}" <<'YAML'
 
   piaware:
-    image: ghcr.io/sdr-enthusiasts/docker-piaware:latest
+    image: ghcr.io/sdr-enthusiasts/docker-piaware:v10.0
     restart: unless-stopped
     depends_on:
       ultrafeeder:
@@ -571,7 +571,7 @@ YAML
     cat >> "${COMPOSE_FILE}" <<'YAML'
 
   prometheus:
-    image: prom/prometheus:latest
+    image: prom/prometheus:v3.11.3
     restart: unless-stopped
     volumes:
       - ./prometheus/config:/etc/prometheus:ro
@@ -580,7 +580,7 @@ YAML
       - /tmp
 
   grafana:
-    image: grafana/grafana-oss:latest
+    image: grafana/grafana-oss:13.0.1
     restart: unless-stopped
     depends_on:
       - prometheus
