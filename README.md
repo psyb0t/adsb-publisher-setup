@@ -1,5 +1,8 @@
 # adsb-publisher-setup
 
+[![version](https://raw.githubusercontent.com/psyb0t/adsb-publisher-setup/badges/version.svg)](https://github.com/psyb0t/adsb-publisher-setup/releases)
+[![license](https://raw.githubusercontent.com/psyb0t/adsb-publisher-setup/badges/license.svg)](LICENSE)
+
 One-script setup for receiving ADS-B aircraft data with an RTL-SDR dongle and publishing it to multiple flight tracking aggregators simultaneously.
 
 Deploys a Docker Compose stack with automatic configuration, SDR detection, and optional Grafana dashboards.
