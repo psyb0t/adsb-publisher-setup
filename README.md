@@ -1,5 +1,6 @@
 # adsb-publisher-setup
 
+[![CI](https://github.com/psyb0t/adsb-publisher-setup/actions/workflows/pipeline.yml/badge.svg?branch=main)](https://github.com/psyb0t/adsb-publisher-setup/actions/workflows/pipeline.yml)
 [![version](https://raw.githubusercontent.com/psyb0t/adsb-publisher-setup/badges/version.svg)](https://github.com/psyb0t/adsb-publisher-setup/releases)
 [![license](https://raw.githubusercontent.com/psyb0t/adsb-publisher-setup/badges/license.svg)](LICENSE)
 
